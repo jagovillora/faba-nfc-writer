@@ -1,6 +1,61 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+
+const SETUP_STEPS = [
+  { icon: '📱', text: <>Abre la app <strong>Atajos</strong> en tu iPhone</> },
+  { icon: '＋', text: <>Pulsa el botón <strong>+</strong> arriba a la derecha</> },
+  { icon: '🔍', text: <>Toca <strong>Añadir acción</strong> y busca <em>"Escribir etiqueta NFC"</em></> },
+  { icon: '✏️', text: <>En el campo de texto, toca y elige la variable <strong>"Entrada del atajo"</strong></> },
+  { icon: '🏷️', text: <>Pulsa <strong>"Atajo sin título"</strong> arriba y escribe exactamente: <code>FABA NFC</code></> },
+  { icon: '✅', text: <>Toca <strong>Listo</strong> — ¡ya está! Solo hay que hacerlo una vez</> },
+];
+
+function IOSShortcutSection({ code, onCopy, onWrite }) {
+  const [showGuide, setShowGuide] = useState(false);
+
+  return (
+    <div className="ios-section">
+      <div className="action-row">
+        <button className="btn btn-primary" onClick={onWrite}>
+          📲 Escribir con Shortcuts
+        </button>
+        <button className="btn btn-secondary" onClick={onCopy}>
+          📋 Copiar
+        </button>
+      </div>
+
+      <button
+        className="ios-guide-toggle"
+        onClick={() => setShowGuide(v => !v)}
+        aria-expanded={showGuide}
+      >
+        {showGuide ? '▲' : '▼'} {showGuide ? 'Ocultar guía de configuración' : '¿Primera vez? Configura el Shortcut (30 seg)'}
+      </button>
+
+      {showGuide && (
+        <div className="ios-guide">
+          <p className="ios-guide-intro">
+            Safari no puede tocar el NFC directamente (limitación de Apple).
+            La app <strong>Atajos</strong> sí puede. Crea este atajo una sola vez:
+          </p>
+          <ol className="ios-steps-list">
+            {SETUP_STEPS.map((s, i) => (
+              <li key={i} className="ios-step">
+                <span className="ios-step-icon">{s.icon}</span>
+                <span>{s.text}</span>
+              </li>
+            ))}
+          </ol>
+          <div className="ios-guide-after">
+            Después vuelve aquí y pulsa <strong>Escribir con Shortcuts</strong>.
+            La app Atajos se abre sola, acercas la etiqueta NTAG213 y graba el código.
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 const LANG_FLAGS = { es: '🇪🇸', en: '🇬🇧', fr: '🇫🇷', it: '🇮🇹' };
 const SHORTCUT_NAME = 'FABA NFC';
@@ -141,29 +196,7 @@ export default function StoryCard({ story, expanded, onToggle }) {
 
                 {/* iOS: Shortcuts flow */}
                 {isIOS && !hasWebNFC && (
-                  <>
-                    <div className="action-row">
-                      <button className="btn btn-primary" onClick={openShortcut}>
-                        📲 Escribir con Shortcuts
-                      </button>
-                      <button className="btn btn-secondary" onClick={copyCode}>
-                        📋 Copiar
-                      </button>
-                    </div>
-                    <div className="ios-shortcut-box">
-                      <div className="ios-shortcut-title">¿Primera vez? Instala el Shortcut (30 seg)</div>
-                      <ol className="ios-steps">
-                        <li>
-                          <a href="/FABA_NFC.shortcut" className="ios-install-link">
-                            ⬇️ Toca aquí para instalar el Shortcut
-                          </a>
-                          {' '}→ pulsa <strong>Añadir Shortcut</strong>
-                        </li>
-                        <li>Vuelve aquí y pulsa <strong>Escribir con Shortcuts</strong></li>
-                        <li>Shortcuts se abre solo, acerca la etiqueta NTAG213 y graba</li>
-                      </ol>
-                    </div>
-                  </>
+                  <IOSShortcutSection code={code} onCopy={copyCode} onWrite={openShortcut} />
                 )}
 
                 {/* Desktop fallback */}
