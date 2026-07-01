@@ -1,0 +1,13 @@
+{
+  "name": "FABA NFC Writer",
+  "short_name": "FABA NFC",
+  "description": "Graba etiquetas NFC para tu FABA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#f97316",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
