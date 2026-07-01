@@ -5,19 +5,7 @@ import StoryCard from './StoryCard';
 
 const LANG_LABELS = { es: 'Español', en: 'Inglés', fr: 'Francés', it: 'Italiano', ca: 'Català' };
 
-const TIPOS = ['Todos', 'Personaje sonoro', 'Contenido digital', 'Juegos', 'Disco para grabación'];
-
-const AGE_GROUPS = [
-  { label: 'Todas', value: null },
-  { label: '0–1', value: '0 – 1' },
-  { label: '0–3', value: '0 – 3' },
-  { label: '0+',  value: '0+' },
-  { label: '1–3', value: '1 – 3' },
-  { label: '1+',  value: '1+' },
-  { label: '3–5', value: '3 – 5' },
-  { label: '4–6', value: '4 – 6' },
-  { label: '5–10', value: '5 – 10' },
-];
+const TIPOS = ['Personaje sonoro', 'Contenido digital', 'Juegos', 'Disco para grabación'];
 
 function FilterBar({ label, children }) {
   return (
@@ -32,7 +20,6 @@ export default function StoryList({ stories }) {
   const [search, setSearch] = useState('');
   const [lang, setLang] = useState(null);
   const [tipo, setTipo] = useState(null);
-  const [edad, setEdad] = useState(null);
   const [expandedId, setExpandedId] = useState(null);
 
   const filtered = useMemo(() => {
@@ -40,7 +27,6 @@ export default function StoryList({ stories }) {
     return stories.filter(s => {
       if (lang && s.idioma !== lang) return false;
       if (tipo && s.tipo !== tipo) return false;
-      if (edad && s.edad !== edad) return false;
       if (q) {
         const haystack = [s.titulo, s.path, s.sku, s.coleccion, s.tipo]
           .filter(Boolean).join(' ').toLowerCase();
@@ -48,14 +34,14 @@ export default function StoryList({ stories }) {
       }
       return true;
     });
-  }, [stories, search, lang, tipo, edad]);
+  }, [stories, search, lang, tipo]);
 
   const toggle = useCallback((id) => {
     setExpandedId(prev => prev === id ? null : id);
   }, []);
 
   const uniqueLangs = Array.from(new Set(stories.map(s => s.idioma).filter(Boolean))).sort();
-  const activeFilters = [lang, tipo, edad].filter(Boolean).length;
+  const activeFilters = [lang, tipo].filter(Boolean).length;
 
   return (
     <>
@@ -82,18 +68,6 @@ export default function StoryList({ stories }) {
           ))}
         </FilterBar>
 
-        <FilterBar label="👶 Edad">
-          {AGE_GROUPS.map(a => (
-            <button
-              key={a.label}
-              className={`filter-btn${edad === a.value ? ' active' : ''}`}
-              onClick={() => setEdad(a.value)}
-            >
-              {a.label}
-            </button>
-          ))}
-        </FilterBar>
-
         <FilterBar label="📦 Tipo">
           <button className={`filter-btn${!tipo ? ' active' : ''}`} onClick={() => setTipo(null)}>Todos</button>
           {TIPOS.slice(1).map(t => (
@@ -110,7 +84,7 @@ export default function StoryList({ stories }) {
         {(search || activeFilters > 0) && (
           <button
             className="clear-filters"
-            onClick={() => { setSearch(''); setLang(null); setTipo(null); setEdad(null); }}
+            onClick={() => { setSearch(''); setLang(null); setTipo(null); }}
           >
             ✕ Limpiar
           </button>
