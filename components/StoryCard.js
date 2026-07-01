@@ -84,11 +84,18 @@ export default function StoryCard({ story, expanded, onToggle }) {
         tabIndex={0}
         onKeyDown={e => e.key === 'Enter' && onToggle()}
       >
-        <div className={`path-badge${!code ? ' no-nfc' : ''}`}>
-          {story.path ?? 'SIN CÓDIGO'}
-        </div>
+        {story.image ? (
+          <img src={story.image} alt={story.titulo} className="card-thumb" loading="lazy" />
+        ) : (
+          <div className={`path-badge${!code ? ' no-nfc' : ''}`}>
+            {story.path ?? 'SIN'}
+          </div>
+        )}
         <div className="card-info">
           <div className="card-title">{story.titulo}</div>
+          {story.image && story.path && (
+            <div className="path-inline">{story.path}</div>
+          )}
           <div className="card-meta">
             {story.idioma && <span className="meta-tag">{LANG_FLAGS[story.idioma] ?? '🌍'} {story.idioma}</span>}
             {story.duracion && <span className="meta-tag">⏱ {story.duracion}</span>}

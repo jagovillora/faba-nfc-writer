@@ -162,6 +162,27 @@ body {
   gap: 3px;
 }
 
+.card-thumb {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+  background: var(--gray-light);
+}
+
+.path-inline {
+  font-size: 11px;
+  font-weight: 700;
+  font-family: monospace;
+  color: var(--orange-dark);
+  background: var(--orange-light);
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+
 .chevron {
   font-size: 18px;
   color: #d1d5db;
